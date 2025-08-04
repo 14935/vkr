@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+qdrant-client
+sentence-transformers
+transformers
+torch
+bitsandbytes
+huggingface_hub
+faster-whisper
+pydantic
