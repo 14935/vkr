@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - HF_TOKEN=${HF_TOKEN}
+    volumes:
+      - ./vectordata:/srv/vectordata
+    ports:
+      - "8000:8000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+  gradio:
+    build:
+      context: .
+      dockerfile: Dockerfile.gradio
+    environment:
+      - BACK=http://backend:8000
+    ports:
+      - "7860:7860"
+    depends_on:
+      - backend
+    restart: unless-stopped
