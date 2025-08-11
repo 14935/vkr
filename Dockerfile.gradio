@@ -1,0 +1,9 @@
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements-gradio.txt .
+RUN pip install --no-cache-dir -r requirements-gradio.txt
+COPY src/front ./front
+EXPOSE 7860
+ENV BACK=http://backend:8000
+CMD ["python", "front/serve.py"]
+

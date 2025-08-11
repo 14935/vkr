@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - HF_TOKEN=${HF_TOKEN}
+      - DEVICE=${DEVICE:-auto}
+      - ASR_CONCURRENCY=${ASR_CONCURRENCY:-1}
+      - GEN_CONCURRENCY=${GEN_CONCURRENCY:-1}
+      - UPSERT_CONCURRENCY=${UPSERT_CONCURRENCY:-2}
+    volumes:
+      - ./vectordata:/srv/vectordata
+    ports:
+      - "8000:8000"
+    gpus: all
+    restart: unless-stopped
+  gradio:
+    build:
+      context: .
+      dockerfile: Dockerfile.gradio
+    environment:
+      - BACK=http://backend:8000
+    ports:
+      - "7860:7860"
+    depends_on:
+      - backend
+    restart: unless-stopped
